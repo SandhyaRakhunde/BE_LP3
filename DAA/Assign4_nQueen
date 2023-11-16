@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution 
+{
+    public:
+        bool isSafe(int column, int roww, vector<vector<int>>& board, int n)
+        {
+            int col = column;
+            int row = roww;
+
+            while(col >=0 )
+            {
+                if(board[row][col] == 1)
+                    return false;
+                col--;
+            }
+            col = column;
+            row = roww;
+            while(col>=0 && row>=0)
+            {
+                if(board[row][col] == 1)
+                    return 1;
+                col--;
+                row--;
+            }
+            col = column;
+            row = roww;
+            while(row<n && col>=0)
+            {
+                if(board[row][col] == 1)
+                    return false;
+                row++;
+                col--;
+            }
+            return true;
+        }
+
+        bool ReccSolve(int col, vector<vector<int>> &board, vector<vector<int>>&final_ans, vector<int>&vec, int n)
+        {
+            if(col == n)
+            {
+                final_ans.push_back(vec);
+            }
+
+            for (int row = 0; row < n;row++)
+            {
+                if(isSafe(col,row,board,n) == true)
+                {
+                    board[row][col] = 1;
+                    vec.push_back(row + 1);
+                    if(ReccSolve(col+1, board, final_ans, vec, n) == true)
+                        return true;
+                    board[row][col] = 0;
+                    vec.pop_back();
+                }
+            }
+            return false;
+        }
+
+        vector<vector<int>> nQueen(int n)
+        {
+            vector<vector<int>> board(n, vector<int>(n, 0));
+            vector<int> vec;
+            vector<vector<int>> final_ans;
+            ReccSolve(0, board, final_ans, vec, n);
+            return final_ans;
+        }
+};
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    Solution ob;
+    vector<vector<int>> ans = ob.nQueen(n);
+    if(ans.size() == 0)
+        cout << -1 << endl;
+    else
+    {
+        for (int i = 0; i < ans.size(); i++)
+        {
+            cout << "[";
+            for(int u : ans[i])
+                cout << u << " ";
+            cout << "] ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
