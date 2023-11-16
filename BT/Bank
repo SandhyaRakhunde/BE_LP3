@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >= 0.8.0;
+
+contract BankDemo
+{
+    int balance;
+    // bool is_user;
+    mapping(address => bool) public is_user;
+
+    constructor()
+    {
+        balance = 1;
+    }
+    function createAccount() public 
+    {
+        require(is_user[msg.sender]==false,"Account already exist!!");
+        is_user[msg.sender] = true;
+    }
+    function getBalance() view public returns (int)
+    {
+        require(is_user[msg.sender],"User has NO account!!");
+        return balance;
+    }
+    function deposite(int amount) public
+    {
+        require(amount>=0,"Amount must be greater than 0!!");
+        balance = balance + amount;
+    }
+    function withdraw(int amount) public 
+    {
+        require(amount<=balance,"You don't have enough balance to withdraw!!");
+        balance = balance - amount;
+    }
+}
