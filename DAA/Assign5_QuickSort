@@ -1,0 +1,129 @@
+// Quick Sort
+// Write a program for analysis of quick sort by using deterministic and randomized variant.
+
+//{ Driver Code Starts
+#include <iostream>
+#include <cstdlib> // Required for random number generation
+#include <ctime>   // Required for seeding the random number generator
+using namespace std;
+
+/* Function to print an array */
+void printArray(int arr[], int size)
+{
+    int i;
+    for (i = 0; i < size; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+// } Driver Code Ends
+class Solution
+{
+public:
+    // Function to sort an array using quick sort algorithm.
+    void quickSort(int arr[], int low, int high)
+    {
+        if (low < high)
+        {
+            int pivotIndex = partition(arr, low, high);
+            quickSort(arr, low, pivotIndex - 1);
+            quickSort(arr, pivotIndex + 1, high);
+        }
+    }
+
+    // Function to sort an array using randomized quick sort algorithm.****
+    void randomizedQuickSort(int arr[], int low, int high)
+    {
+        if (low < high)
+        {
+            // Randomly select a pivot element
+            int pivotIndex = rand() % (high - low + 1) + low; // Random pivot selection
+            swap(arr[pivotIndex], arr[low]);                  // Swap the selected pivot with the first element
+
+            int pivot = partition(arr, low, high);
+            randomizedQuickSort(arr, low, pivot - 1);
+            randomizedQuickSort(arr, pivot + 1, high);
+        }
+    }
+
+public:
+    int partition(int arr[], int low, int high)
+    {
+        int i = low;
+        int j = high;
+        int pivot = arr[low];
+
+        while (i < j)
+        {
+            while (arr[i] <= pivot && i < high)
+            {
+                i++;
+            }
+            while (arr[j] >= pivot && j > low)
+            {
+                j--;
+            }
+            if (i < j)
+            {
+                swap(arr[i], arr[j]);
+            }
+        }
+        swap(arr[j], arr[low]); // as pivot == arr[low]
+        return j;
+    }
+};
+
+//{ Driver Code Starts.
+int main()
+{
+    int arr[1000], n, i;
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    Solution ob;
+    cout << "Normal Determinant Quick sort: ";
+    ob.quickSort(arr, 0, n - 1);
+    printArray(arr, n);
+
+    // Initialize random seed
+    srand(time(0)); // Seed the random number generator with the current time
+    ob.randomizedQuickSort(arr, 0, n - 1);
+    cout << "Romdomized varient Quick sort: ";
+    printArray(arr, n);
+
+    return 0;
+}
+// } Driver Code Ends
+
+// n = 5
+// arr = 12 16 10 13 11
+// output = 10 11 12 13 16
+
+/*
+key differences in the analysis of Time Complexity (TC), Space Complexity (SC), number of comparisons, and other factors between the deterministic and randomized variants of the Quick Sort algorithm:
+
+Deterministic Quick Sort:
+
+Time Complexity (average case): O(n log n)
+Time Complexity (worst case): O(n^2) when the pivot selection is poorly chosen (e.g., already sorted array)
+Space Complexity: O(log n) due to the recursive call stack
+Number of Comparisons: In the worst-case scenario, the number of comparisons can be high.
+Stability: Not a stable sorting algorithm.
+Deterministic: The choice of pivot is deterministic, typically selecting the first or last element as the pivot.
+
+
+Randomized Quick Sort:
+
+Time Complexity (average case): O(n log n)
+Time Complexity (worst case): O(n^2) is highly unlikely due to the random pivot selection.
+Space Complexity: O(log n) due to the recursive call stack, similar to deterministic Quick Sort.
+Number of Comparisons: Expected to have fewer comparisons on average, as the random pivot selection reduces the chance of encountering worst-case scenarios.
+Stability: Not a stable sorting algorithm.
+Randomized: The pivot is selected randomly from the array, reducing the likelihood of worst-case scenarios.
+
+
+In summary, the key difference between the two variants lies in the pivot selection strategy. The deterministic variant can encounter worst-case scenarios when the
+input data is nearly sorted, while the randomized variant minimizes the chance of this occurring by selecting the pivot randomly.
+This makes randomized Quick Sort more robust and reliable in terms of time complexity.
+*/
